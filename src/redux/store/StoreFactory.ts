@@ -1,9 +1,9 @@
 import { applyMiddleware, createStore, Store, combineReducers } from 'redux';
+import thunkMiddleware from 'redux-thunk';
 import { ProcessState } from '../state/ProcessState';
 import { SaveProcessAction } from '../action/SaveProcessAction';
 import { ActionType } from '../action/ActionType';
 import { Process } from '../../model/Process';
-
 
 
 export class StoreFactory {
@@ -12,23 +12,25 @@ export class StoreFactory {
 
     static getStore(): Store {
         if (!StoreFactory.store)
-            StoreFactory.store = createStore(rootReducer);
+            StoreFactory.store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
         return StoreFactory.store;
     }
 
 
 }
 
-const emptyState: ProcessState = new ProcessState(new Process(0, 0, []));
+const emptyState: ProcessState = new ProcessState(new Process('', '', []));
 
 
-const processReducer = (state = emptyState, action = SaveProcessAction) => {
+const processReducer = (state: ProcessState = emptyState, action: SaveProcessAction) => {
     var newState: ProcessState = emptyState;
-    switch (action.prototype.type) {
+    switch (action.type) {
 
         case ActionType.SAVING_PROCESS_TYPE:
 
             newState.isFetching = true;
+            newState.process = action.process;
+            console.log(action);
 
             return Object.assign(
                 emptyState,
@@ -58,6 +60,8 @@ const processReducer = (state = emptyState, action = SaveProcessAction) => {
 
 
     }
+
+    return newState;
 
 }
 

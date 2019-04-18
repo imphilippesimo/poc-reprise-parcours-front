@@ -1,33 +1,18 @@
 import { AppAction } from "./AppAction";
+import { Process } from "../../model/Process";
 
-export class SaveProcessAction extends AppAction{
+export class SaveProcessAction extends AppAction {
 
-    constructor(type: string) {
+    process: Process;
+
+    constructor(type: string, process: Process) {
         super(type);
-    
-        
+        this.process = process;
+
+
     }
-    
 
 
-    /**
-     * Getter type
-     * @return {string}
-     */
-	public get type(): string {
-		return this.type;
-	}
 
-    /**
-     * Setter type
-     * @param {string} value
-     */
-	public set type(value: string) {
-		this.type = value;
-	}
-
-    
-
-	
 
 }

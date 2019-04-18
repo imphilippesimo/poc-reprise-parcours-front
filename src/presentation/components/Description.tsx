@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import NavButton from './NavButton';
 import { BrowserRouter as Router, Route, Link, NavLink, Redirect, withRouter } from "react-router-dom";
+import { ProcessState } from '../../redux/state/ProcessState';
+import { Process } from '../../model/Process';
+import { Step } from '../../model/Step';
+import { connect } from 'react-redux';
 
-type Props = {
 
-}
 
 type State = {
     title: string | number | string[] | undefined,
@@ -13,6 +15,8 @@ type State = {
     details: string | number | string[] | undefined
 
 }
+
+type Props = State;
 
 class Description extends Component<Props, State> {
 
@@ -67,6 +71,10 @@ class Description extends Component<Props, State> {
 
     }
 
+    componentDidMount() {
+        this.setState(this.props);
+    }
+
 
     render() {
         return (
@@ -86,7 +94,7 @@ class Description extends Component<Props, State> {
 
 
 
-                    <NavButton destination="/pricing" value="Suivant" data={this.state} step="description"></NavButton>
+                    <NavButton destination="/pricing" value="Suivant" data={shrink(this.state)} step="description"></NavButton>
                 </form>
             </div>
 
@@ -94,4 +102,31 @@ class Description extends Component<Props, State> {
     }
 }
 
-export default Description
+let shrink = ({ title, category, purpose, details }: { title: any, category: any, purpose: any, details: any }) => {
+    return ({ title, category, purpose, details });
+}
+
+const mapStateToProps = (state: any) => {
+
+    const processState: ProcessState = state.processState;
+    const process: Process = processState.process;
+    const currentStep = process.steps.filter((step: Step) => {
+        if (step.stepId === "description")
+            return step;
+    })[0];
+    if (currentStep) {
+        return extractData(currentStep.data);
+    }
+
+    else
+        return {};
+
+}
+
+const extractData = (data: string) => {
+
+    return JSON.parse(data);
+
+}
+
+export default connect(mapStateToProps)(Description);

@@ -1,50 +1,51 @@
 import { Step } from "./Step";
 
 export class Process {
-    private _processId: number;
-    private _processInstanceId: number;
+    private _processId: string;
+    private _processInstanceId: string;
     private _steps: Step[];
 
 
-    constructor(processId: number, processInstanceId: number, steps: Step[]) {
+    constructor(processId: string, processInstanceId: string, steps: Step[]) {
         this._processId = processId;
         this._processInstanceId = processInstanceId;
         this._steps = steps;
     }
 
-
     /**
      * Getter processId
-     * @return {number}
+     * @return {string}
      */
-    public get processId(): number {
-        return this._processId;
-    }
+	public get processId(): string {
+		return this._processId;
+	}
 
     /**
      * Getter processInstanceId
-     * @return {number}
+     * @return {string}
      */
-    public get processInstanceId(): number {
-        return this._processInstanceId;
-    }
-
+	public get processInstanceId(): string {
+		return this._processInstanceId;
+	}
 
     /**
      * Setter processId
-     * @param {number} value
+     * @param {string} value
      */
-    public set processId(value: number) {
-        this._processId = value;
-    }
+	public set processId(value: string) {
+		this._processId = value;
+	}
 
     /**
      * Setter processInstanceId
-     * @param {number} value
+     * @param {string} value
      */
-    public set processInstanceId(value: number) {
-        this._processInstanceId = value;
-    }
+	public set processInstanceId(value: string) {
+		this._processInstanceId = value;
+	}
+   
+
+   
 
     /**
      * Getter steps
