@@ -97,6 +97,7 @@ class Description extends Component<Props, State> {
 
 
                     <NavButton destination="/pricing" value="Suivant" data={shrink(this.state)} stepId={stepId} direction="forward" />
+                    <NavButton destination="/description" value="Sauvegarder" data={shrink(this.state)} stepId={stepId} direction="forward" />
                 </form>
             </div>
 

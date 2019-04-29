@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import NavButton from './NavButton';
-import { ProcessState } from '../../redux/state/ProcessState';
-import { Process } from '../../model/Process';
-import { Step } from '../../model/Step';
 import { connect } from 'react-redux';
 import { Utils } from '../../application/Utils';
+import NavButton from './NavButton';
 
 
 type State = {
@@ -87,6 +84,7 @@ class Pricing extends Component<Props, State> {
 
                     <NavButton destination="/summary" value="Suivant" data={shrink(this.state)} stepId={stepId} direction="forward"></NavButton>
                     <NavButton destination="/description" value="Précédent" direction="backward"></NavButton>
+                    <NavButton destination="/pricing" value="Sauvegarder" data={shrink(this.state)} stepId={stepId} direction="forward"></NavButton>
                 </form>
             </div>
 
