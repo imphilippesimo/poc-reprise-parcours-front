@@ -7,7 +7,7 @@ export class Process {
     savedDate: any;
     steps: Step[];
     url?: HookURL;
-    private _flatUrl?: string;
+    flatUrl?: string;
 
 
     constructor(processId: string, processInstanceId: string, steps: Step[], url?: HookURL) {
@@ -18,10 +18,7 @@ export class Process {
         this.url = url;
     }
 
-    set flatUrl(url: string) {
-        this._flatUrl = url;
-    }
-
+    
 
 
 }

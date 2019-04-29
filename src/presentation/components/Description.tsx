@@ -1,23 +1,28 @@
 import React, { Component } from 'react';
-import NavButton from './NavButton';
-import { BrowserRouter as Router, Route, Link, NavLink, Redirect, withRouter } from "react-router-dom";
-import { ProcessState } from '../../redux/state/ProcessState';
-import { Process } from '../../model/Process';
-import { Step } from '../../model/Step';
 import { connect } from 'react-redux';
 import { Utils } from '../../application/Utils';
+import NavButton from './NavButton';
+import { Save } from '../../application/Save';
+import { Process } from '../../model/Process';
 
 
 
 type State = {
-    title: string | number | string[] | undefined,
-    category: string | number | string[] | undefined,
-    purpose: string | number | string[] | undefined,
-    details: string | number | string[] | undefined
+    title: string,
+    category: string,
+    purpose: string,
+    details: string
 
 }
 
-type Props = State;
+type Props = {
+    title: string,
+    category: string,
+    purpose: string,
+    details: string,
+    save: Function,
+    process: Process
+};
 const stepId: string = "description";
 class Description extends Component<Props, State> {
 
@@ -32,7 +37,22 @@ class Description extends Component<Props, State> {
         }
     }
 
-    
+    // Things to do before unloading/closing the tab
+    saveDataBeforeUnload = () => {
+        console.log(this.state);
+        console.log(this.props);
+        Utils.saveData(shrink(this.state), stepId, this.props.save, this.props.process ? this.props.process : new Process('', '', []));
+    }
+
+    // Setup the `beforeunload` event listener
+    setupBeforeUnloadListener = () => {
+        window.addEventListener("beforeunload", (ev) => {
+            ev.preventDefault();
+            return this.saveDataBeforeUnload();
+        });
+    };
+
+
     handleChange = (e: any, key: string) => {
         switch (key) {
             case 'title':
@@ -74,9 +94,10 @@ class Description extends Component<Props, State> {
     }
 
     componentDidMount() {
-        this.setState(this.props);
+        //console.log(this.props);
+        this.setState(shrink(this.props));
+        this.setupBeforeUnloadListener();
     }
-
 
     render() {
         return (
@@ -109,9 +130,19 @@ const shrink = ({ title, category, purpose, details }: { title: any, category: a
     return ({ title, category, purpose, details });
 }
 
-const mapStateToProps = (state: any) => {
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        save: (process: Process) => {
+            dispatch(Save.instance().save(dispatch, process));
+        }
+        //Feel free to add other actions, they will be bound to this component props
+    }
 
-    return Utils.mapStateToStepProps(state,stepId);
 }
 
-export default connect(mapStateToProps)(Description);
+const mapStateToProps = (state: any) => {
+    console.log(state);
+    return Utils.mapStateToStepProps(state, stepId);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Description);

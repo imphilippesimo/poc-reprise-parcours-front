@@ -23,6 +23,7 @@ export class StoreFactory {
 
 
 const processReducer = (state: any = new ProcessState(new Process('', '', [])), action: SaveProcessAction) => {
+    //console.log(action);
     var newState: ProcessState = new ProcessState(new Process('', '', []));
     switch (action.type) {
 

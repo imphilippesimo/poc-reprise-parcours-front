@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Utils } from '../../application/Utils';
 import NavButton from './NavButton';
+import { Process } from '../../model/Process';
+import { Save } from '../../application/Save';
 
 
 type State = {
@@ -12,7 +14,17 @@ type State = {
 
 }
 
-type Props = State;
+type Props = {
+    realPrice: string,
+    displayedPrice: string,
+    paymentMode: string,
+    save: Function,
+    process: Process
+
+
+}
+
+
 const stepId: string = "pricing";
 class Pricing extends Component<Props, State> {
 
@@ -25,8 +37,22 @@ class Pricing extends Component<Props, State> {
         }
     }
 
+    // Things to do before unloading/closing the tab
+    saveDataBeforeUnload = () => {
+        Utils.saveData(shrink(this.state), stepId, this.props.save, this.props.process ? this.props.process : new Process('', '', []));
+    }
+
+    // Setup the `beforeunload` event listener
+    setupBeforeUnloadListener = () => {
+        window.addEventListener("beforeunload", (ev) => {
+            ev.preventDefault();
+            return this.saveDataBeforeUnload();
+        });
+    };
+
     componentDidMount() {
         this.setState(this.props);
+        this.setupBeforeUnloadListener();
     }
 
     handleChange = (e: any, key: string) => {
@@ -100,8 +126,18 @@ const shrink = ({ realPrice, displayedPrice, paymentMode }: { realPrice: any, di
     return ({ realPrice, displayedPrice, paymentMode });
 }
 
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        save: (process: Process) => {
+            dispatch(Save.instance().save(dispatch, process));
+        }
+        //Feel free to add other actions, they will be bound to this component props
+    }
+
+}
+
 const mapStateToProps = (state: any) => {
     return Utils.mapStateToStepProps(state, stepId);
 }
 
-export default connect(mapStateToProps)(Pricing);
+export default connect(mapStateToProps, mapDispatchToProps)(Pricing);
