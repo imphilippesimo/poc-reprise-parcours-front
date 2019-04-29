@@ -1,28 +1,92 @@
 import React, { Component } from 'react';
 import NavButton from './NavButton';
+import { ProcessState } from '../../redux/state/ProcessState';
+import { Process } from '../../model/Process';
+import { Step } from '../../model/Step';
+import { connect } from 'react-redux';
+import { Utils } from '../../application/Utils';
 
 
+type State = {
+    realPrice: string,
+    displayedPrice: string,
+    paymentMode: string
 
-class Pricing extends Component {
+
+}
+
+type Props = State;
+const stepId: string = "pricing";
+class Pricing extends Component<Props, State> {
+
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            realPrice: '',
+            displayedPrice: '',
+            paymentMode: ''
+        }
+    }
+
+    componentDidMount() {
+        this.setState(this.props);
+    }
+
+    handleChange = (e: any, key: string) => {
+        switch (key) {
+            case 'realPrice':
+
+                this.setState({
+                    realPrice: e.target.value
+                })
+
+
+                break;
+            case 'displayedPrice':
+
+                this.setState({
+                    displayedPrice: e.target.value
+                })
+
+
+                break;
+            case 'paymentMode':
+
+                this.setState({
+                    paymentMode: e.target.value
+                })
+
+
+                break;
+            default:
+                break;
+        }
+
+        //console.log(this.state);
+
+    }
+
     render() {
         return (
             <div>
 
                 <form>
                     <label>Prix Réel</label>
-                    <input type="text" id="realPrice" name="realPrice" placeholder="Ex: 19.95" />
+                    <input type="text" id="realPrice" value={this.state.realPrice} onChange={(e) => this.handleChange(e, "realPrice")} placeholder="Ex: 19.95" />
 
                     <label>Prix affiché</label>
-                    <input type="text" id="displayedPrice" name="displayedPrice" placeholder="Ex: 9.95" />
+                    <input type="text" id="displayedPrice" value={this.state.displayedPrice} onChange={(e) => this.handleChange(e, "displayedPrice")} placeholder="Ex: 9.95" />
 
-                    <label>Mode de paiement</label><br/>
-                    <select>
+                    <label>Mode de paiement</label><br />
+                    <select value={this.state.paymentMode} onChange={(e) => this.handleChange(e, "paymentMode")}>
+                        <option>Choisir</option>
                         <option value="cb">Carte bancaire</option>
                         <option value="cash">Espèces</option>
                     </select>
 
-                    <NavButton destination="/description" value="Précédent"></NavButton>
-                    <NavButton destination="/summary" value="Suivant"></NavButton>
+
+                    <NavButton destination="/summary" value="Suivant" data={shrink(this.state)} stepId={stepId} direction="forward"></NavButton>
+                    <NavButton destination="/description" value="Précédent" direction="backward"></NavButton>
                 </form>
             </div>
 
@@ -34,4 +98,12 @@ class Pricing extends Component {
 
 }
 
-export default Pricing
+const shrink = ({ realPrice, displayedPrice, paymentMode }: { realPrice: any, displayedPrice: any, paymentMode: any }) => {
+    return ({ realPrice, displayedPrice, paymentMode });
+}
+
+const mapStateToProps = (state: any) => {
+    return Utils.mapStateToStepProps(state, stepId);
+}
+
+export default connect(mapStateToProps)(Pricing);

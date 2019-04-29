@@ -5,6 +5,7 @@ import { ProcessState } from '../../redux/state/ProcessState';
 import { Process } from '../../model/Process';
 import { Step } from '../../model/Step';
 import { connect } from 'react-redux';
+import { Utils } from '../../application/Utils';
 
 
 
@@ -17,7 +18,7 @@ type State = {
 }
 
 type Props = State;
-
+const stepId: string = "description";
 class Description extends Component<Props, State> {
 
 
@@ -31,6 +32,7 @@ class Description extends Component<Props, State> {
         }
     }
 
+    
     handleChange = (e: any, key: string) => {
         switch (key) {
             case 'title':
@@ -94,7 +96,7 @@ class Description extends Component<Props, State> {
 
 
 
-                    <NavButton destination="/pricing" value="Suivant" data={shrink(this.state)} step="description"></NavButton>
+                    <NavButton destination="/pricing" value="Suivant" data={shrink(this.state)} stepId={stepId} direction="forward" />
                 </form>
             </div>
 
@@ -102,31 +104,13 @@ class Description extends Component<Props, State> {
     }
 }
 
-let shrink = ({ title, category, purpose, details }: { title: any, category: any, purpose: any, details: any }) => {
+const shrink = ({ title, category, purpose, details }: { title: any, category: any, purpose: any, details: any }) => {
     return ({ title, category, purpose, details });
 }
 
 const mapStateToProps = (state: any) => {
 
-    const processState: ProcessState = state.processState;
-    const process: Process = processState.process;
-    const currentStep = process.steps.filter((step: Step) => {
-        if (step.stepId === "description")
-            return step;
-    })[0];
-    if (currentStep) {
-        return extractData(currentStep.data);
-    }
-
-    else
-        return {};
-
-}
-
-const extractData = (data: string) => {
-
-    return JSON.parse(data);
-
+    return Utils.mapStateToStepProps(state,stepId);
 }
 
 export default connect(mapStateToProps)(Description);

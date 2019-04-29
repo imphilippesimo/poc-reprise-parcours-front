@@ -2,44 +2,59 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 import NavButton from './NavButton';
+import { ProcessState } from '../../redux/state/ProcessState';
+import { Process } from '../../model/Process';
+import { connect } from 'react-redux';
 
-class Summary extends Component {
+type Props = {
+    title: string,
+    category: string,
+    purpose: string,
+    details: string,
+    realPrice: string,
+    displayedPrice: string,
+    paymentMode: string
+
+}
+
+class Summary extends Component<Props> {
 
     onSave() {
-        alert('Sure ?');        
+        alert('Sure ?');
     }
 
     render() {
         return (
             <Router>
                 <form>
-                    <label>Titre:</label>
-                    <h3>Titre de l'annonce</h3>
+                    <h3>Titre:</h3>
+                    <h5>{this.props.title}</h5>
 
-                    <label>Catégorie</label>
-                    <h3>Catégorie du produit</h3>
+                    <h3>Catégorie</h3>
+                    <h5>{this.props.category}</h5>
 
-                    <label>Motivation</label>
-                    <h3>Raison de la mise en vente</h3>
+                    <h3>Motivation</h3>
+                    <h5>{this.props.purpose}</h5>
 
-                    <label>Description détaillée</label>
                     <h3>Description détaillée</h3>
+                    <h5>{this.props.details}</h5>
 
-                    <label>Prix réel</label>
-                    <h3>19.95</h3>
+                    <h3>Prix réel</h3>
+                    <h5>{this.props.realPrice}</h5>
 
-                    <label>Prix affiché</label>
-                    <h3>9.95</h3>
+                    <h3>Prix affiché</h3>
+                    <h5>{this.props.displayedPrice}</h5>
 
-                    <label>Mode de paiement</label>
-                    <h3>Espèces</h3>
+                    <h3>Mode de paiement</h3>
+                    <h5>{this.props.paymentMode}</h5>
 
-                    <NavButton destination="/pricing" value="Précédent"></NavButton>
-                    <button
+
+                    <button color="forward"
                         onClick={this.onSave}
                     >
                         Envoyer
                     </button>
+                    <NavButton destination="/pricing" value="Précédent" direction="backward"></NavButton>
 
                 </form>
             </Router>
@@ -51,4 +66,41 @@ class Summary extends Component {
 
 }
 
-export default Summary
+const mapStateToProps = (state: any) => {
+    const processState: ProcessState = state.processState;
+    const process: Process = processState.process;
+    let props: Props = {
+        title: '',
+        category: '',
+        purpose: '',
+        details: '',
+        realPrice: '',
+        displayedPrice: '',
+        paymentMode: ''
+    }
+
+    if (process.steps) {
+        process.steps.map(s => {
+            switch (s.stepId) {
+                case 'description':
+                    props.title = JSON.parse(s.data).title;
+                    props.category = JSON.parse(s.data).category;
+                    props.purpose = JSON.parse(s.data).purpose;
+                    props.details = JSON.parse(s.data).details;
+                    break;
+                case 'pricing':
+                    props.realPrice = JSON.parse(s.data).realPrice;
+                    props.displayedPrice = JSON.parse(s.data).displayedPrice;
+                    props.paymentMode = JSON.parse(s.data).paymentMode;
+                    break;
+                default:
+                    break;
+            }
+
+        });
+    }
+
+    return props;
+}
+
+export default connect(mapStateToProps)(Summary);

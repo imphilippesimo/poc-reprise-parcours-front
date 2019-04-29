@@ -19,49 +19,59 @@ export class StoreFactory {
 
 }
 
-const emptyState: ProcessState = new ProcessState(new Process('', '', []));
+//const emptyState: ProcessState = new ProcessState(new Process('', '', []));
 
 
-const processReducer = (state: ProcessState = emptyState, action: SaveProcessAction) => {
-    var newState: ProcessState = emptyState;
+const processReducer = (state: any = new ProcessState(new Process('', '', [])), action: SaveProcessAction) => {
+    var newState: ProcessState = new ProcessState(new Process('', '', []));
     switch (action.type) {
+
+        case ActionType.LOADING_PROCESS_TYPE:
+            newState.isFetching = true;
+            //console.log(Object.assign(new ProcessState(new Process('', '', [])), state, newState));
+            return Object.assign(new ProcessState(new Process('', '', [])), state, newState);
+
+
+        case ActionType.LOADING_PROCESS_SUCCESS_TYPE:
+
+            //SET UP NEW STATE after load success
+            newState.isFetching = false;
+            newState.process = action.process;
+            //console.log(action);
+
+            //console.log(Object.assign(new ProcessState(new Process('', '', [])), state, newState));
+            return Object.assign(new ProcessState(new Process('', '', [])), state, newState);
+
+
 
         case ActionType.SAVING_PROCESS_TYPE:
 
             newState.isFetching = true;
             newState.process = action.process;
-            console.log(action);
+            //console.log(action);
 
-            return Object.assign(
-                emptyState,
-                state,
-                newState
-            );
+            return Object.assign(new ProcessState(new Process('', '', [])), state, newState);
+
+
         case ActionType.SAVING_PROCESS_SUCCESS_TYPE:
 
-            //TODO SET UP NEW STATE after save success
+            //SET UP NEW STATE after save success
+            newState.isFetching = false;
+            newState.process = action.process;
 
-            return Object.assign(
-                emptyState,
-                state,
-                newState
-            );
+            return Object.assign(new ProcessState(new Process('', '', [])), state, newState);
+
+
 
         case ActionType.SAVING_PROCESS_FAILURE_TYPE:
 
             //TODO SET UP NEW STATE after save failure
-
-            return Object.assign(
-                emptyState,
-                state,
-                newState
-            );
+            return state
+        default: return state;
 
 
 
     }
-
-    return newState;
 
 }
 

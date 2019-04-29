@@ -19,7 +19,15 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+button[color=backward]{
+  background-color: #6bcdea;
+}
+
+button[color=backward]:hover{
+  background-color: #5eb6d1;
+}
+
+button[color=forward]:hover{
   background-color: #45a049;
 }
 
