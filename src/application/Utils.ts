@@ -18,17 +18,16 @@ export class Utils {
         if (process.steps) {
 
             const currentStep: Step = process.steps.filter(s => s.stepId === stepId)[0];
-            console.log(currentStep);
+
             if (currentStep) {
-                console.log(currentStep);
                 return { ...Utils.extractData(currentStep.data), process: process };
             }
 
             else
                 return {};
 
-        } else
-            return {};
+        }
+        return {};
     }
 
     static extractData = (data: string) => {
@@ -64,7 +63,7 @@ export class Utils {
             return s;
         })
 
-      
+
         //not a step update, add it to the process
         if (!updating) {
             process.steps.push(step);

@@ -10,22 +10,13 @@ type State = {
     realPrice: string,
     displayedPrice: string,
     paymentMode: string
-
-
 }
 
-type Props = {
-    realPrice: string,
-    displayedPrice: string,
-    paymentMode: string,
-    save: Function,
-    process: Process
-
-
-}
+type Props = State;
 
 
 const stepId: string = "pricing";
+
 class Pricing extends Component<Props, State> {
 
     constructor(props: Props) {
@@ -35,24 +26,6 @@ class Pricing extends Component<Props, State> {
             displayedPrice: '',
             paymentMode: ''
         }
-    }
-
-    // Things to do before unloading/closing the tab
-    saveDataBeforeUnload = () => {
-        Utils.saveData(shrink(this.state), stepId, this.props.save, this.props.process ? this.props.process : new Process('', '', []));
-    }
-
-    // Setup the `beforeunload` event listener
-    setupBeforeUnloadListener = () => {
-        window.addEventListener("beforeunload", (ev) => {
-            ev.preventDefault();
-            return this.saveDataBeforeUnload();
-        });
-    };
-
-    componentDidMount() {
-        this.setState(this.props);
-        this.setupBeforeUnloadListener();
     }
 
     handleChange = (e: any, key: string) => {
@@ -126,18 +99,8 @@ const shrink = ({ realPrice, displayedPrice, paymentMode }: { realPrice: any, di
     return ({ realPrice, displayedPrice, paymentMode });
 }
 
-const mapDispatchToProps = (dispatch: any) => {
-    return {
-        save: (process: Process) => {
-            dispatch(Save.instance().save(dispatch, process));
-        }
-        //Feel free to add other actions, they will be bound to this component props
-    }
-
-}
-
 const mapStateToProps = (state: any) => {
     return Utils.mapStateToStepProps(state, stepId);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Pricing);
+export default connect(mapStateToProps)(Pricing);

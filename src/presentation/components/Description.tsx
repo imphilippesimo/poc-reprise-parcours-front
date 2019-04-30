@@ -15,14 +15,7 @@ type State = {
 
 }
 
-type Props = {
-    title: string,
-    category: string,
-    purpose: string,
-    details: string,
-    save: Function,
-    process: Process
-};
+type Props = State;
 const stepId: string = "description";
 class Description extends Component<Props, State> {
 
@@ -36,21 +29,6 @@ class Description extends Component<Props, State> {
             details: ''
         }
     }
-
-    // Things to do before unloading/closing the tab
-    saveDataBeforeUnload = () => {
-        console.log(this.state);
-        console.log(this.props);
-        Utils.saveData(shrink(this.state), stepId, this.props.save, this.props.process ? this.props.process : new Process('', '', []));
-    }
-
-    // Setup the `beforeunload` event listener
-    setupBeforeUnloadListener = () => {
-        window.addEventListener("beforeunload", (ev) => {
-            ev.preventDefault();
-            return this.saveDataBeforeUnload();
-        });
-    };
 
 
     handleChange = (e: any, key: string) => {
@@ -94,9 +72,7 @@ class Description extends Component<Props, State> {
     }
 
     componentDidMount() {
-        //console.log(this.props);
         this.setState(shrink(this.props));
-        this.setupBeforeUnloadListener();
     }
 
     render() {
@@ -141,7 +117,6 @@ const mapDispatchToProps = (dispatch: any) => {
 }
 
 const mapStateToProps = (state: any) => {
-    console.log(state);
     return Utils.mapStateToStepProps(state, stepId);
 }
 
