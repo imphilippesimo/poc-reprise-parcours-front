@@ -20,7 +20,8 @@ export class Utils {
             const currentStep: Step = process.steps.filter(s => s.stepId === stepId)[0];
 
             if (currentStep) {
-                return { ...Utils.extractData(currentStep.data), process: process };
+                //console.log(Utils.extractData(currentStep.data));
+                return Utils.extractData(currentStep.data);
             }
 
             else

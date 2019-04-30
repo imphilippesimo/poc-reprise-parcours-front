@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Utils } from '../../application/Utils';
 import NavButton from './NavButton';
-import { Process } from '../../model/Process';
-import { Save } from '../../application/Save';
 
 
 type State = {
@@ -60,6 +58,10 @@ class Pricing extends Component<Props, State> {
 
         //console.log(this.state);
 
+    }
+
+    componentDidMount() {
+        this.setState(shrink(this.props));
     }
 
     render() {
