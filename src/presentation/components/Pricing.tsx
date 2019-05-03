@@ -7,7 +7,8 @@ import NavButton from './NavButton';
 type State = {
     realPrice: string,
     displayedPrice: string,
-    paymentMode: string
+    paymentMode: string,
+    instanceId?: string,
 }
 
 type Props = State;
@@ -25,6 +26,9 @@ class Pricing extends Component<Props, State> {
             paymentMode: ''
         }
     }
+
+    saveLocation = this.props.instanceId ? `/pricing?instance_id=${this.props.instanceId}` : '/pricing';
+    previousLocation = this.props.instanceId ? `/description?instance_id=${this.props.instanceId}` : '/description';
 
     handleChange = (e: any, key: string) => {
         switch (key) {
@@ -61,6 +65,7 @@ class Pricing extends Component<Props, State> {
     }
 
     componentDidMount() {
+        console.log(this.props);
         this.setState(shrink(this.props));
     }
 
@@ -84,8 +89,8 @@ class Pricing extends Component<Props, State> {
 
 
                     <NavButton destination="/summary" value="Suivant" data={shrink(this.state)} stepId={stepId} direction="forward"></NavButton>
-                    <NavButton destination="/description" value="Précédent" direction="backward"></NavButton>
-                    <NavButton destination="/pricing" value="Sauvegarder" data={shrink(this.state)} stepId={stepId} direction="forward"></NavButton>
+                    <NavButton destination={this.previousLocation} value="Précédent" direction="backward"></NavButton>
+                    <NavButton destination={this.saveLocation} value="Sauvegarder" data={shrink(this.state)} stepId={stepId} direction="forward"></NavButton>
                 </form>
             </div>
 

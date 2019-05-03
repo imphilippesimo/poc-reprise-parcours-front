@@ -38,8 +38,6 @@ class App extends Component<Props> {
         </div>
       );
     } else {
-      //TODO print loading message
-
       return (
         <p>
           Chargement ...
@@ -50,11 +48,11 @@ class App extends Component<Props> {
 }
 
 const mapDispatchToProps = (dispatch: any) => {
-  const url:URL = new URL(window.location.href);
+  const url: URL = new URL(window.location.href);
   //const processInstanceId:string = url.searchParams.get("instance_id");
   return {
     rebind: () => {
-      dispatch(Load.instance().load(dispatch,url.searchParams.get("instance_id")));
+      dispatch(Load.instance().load(dispatch, url.searchParams.get("instance_id")));
     },
     //Feel free to add other actions, they will be bound to this component props
   }
@@ -69,4 +67,4 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

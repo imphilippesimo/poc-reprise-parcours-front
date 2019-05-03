@@ -3,8 +3,6 @@ import { Process } from "../model/Process";
 import { Step } from "../model/Step";
 import { ProcessState } from "../redux/state/ProcessState";
 
-type History = import("history").History<any>;
-
 export class Utils {
 
     static PROCESS_ID = "SELLING";
@@ -21,11 +19,19 @@ export class Utils {
 
             if (currentStep) {
                 //console.log(Utils.extractData(currentStep.data));
-                return Utils.extractData(currentStep.data);
+                const result = {
+                    ...Utils.extractData(currentStep.data),
+                    instanceId: process.processInstanceId
+
+                }
+                console.log(result);
+                return result;
             }
 
             else
-                return {};
+                return {
+                    instanceId: process.processInstanceId
+                };
 
         }
         return {};
@@ -38,20 +44,17 @@ export class Utils {
 
     }
 
-    static flatenUrl = (url: HookURL): string => {
-        return url.host + ":" + url.port + "/" + url.stepId + "?" + url.paramName + "=" + url.paramValue;
 
-    }
 
     static updateProcessWithStep = (step: Step, process: Process): Process => {
 
         let updating: boolean = false;
 
         //in case of empty process, initialize a new one and return
-        if (!process.processId) {
-            const process_instance_id = Utils.PROCESS_ID + Math.floor(Math.random() * 200000).toString();
-            let hookURL: HookURL = new HookURL("http://localhost", "3000", step.stepId, process_instance_id);
-            return new Process(Utils.PROCESS_ID, process_instance_id, [step], hookURL);
+        let hookURL: HookURL = new HookURL("http://localhost", "3000", step.stepId);
+        if (!process.processInstanceId) {
+
+            return new Process(Utils.PROCESS_ID, [step], hookURL);
         }
 
         //if this step already exist in the process, its just a step update
@@ -72,16 +75,16 @@ export class Utils {
 
         //update the hookUrl
         if (process.url)
-            process.url.stepId = step.stepId;
+            process.url = hookURL;
         return process;
     }
 
-    static saveData = (data: any, stepId: string, saveFunction: Function, process: Process) => {
+    static saveData = async (data: any, stepId: string, saveFunction: Function, process: Process) => {
 
         const dataAsJSON = JSON.stringify(data);
         const step: Step = new Step(stepId, dataAsJSON);
         process = Utils.updateProcessWithStep(step, process);
-        saveFunction(process);
+        await saveFunction(process);
 
 
     }

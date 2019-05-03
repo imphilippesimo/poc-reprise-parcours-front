@@ -27,7 +27,7 @@ class NavButton extends Component<Props> {
   }
 
   render() {
-    //console.log(this.props);
+    //console.log(this.props.destination);
     const Button = withRouter(({ history }) => (
       <button
         color={this.props.direction}
@@ -44,13 +44,17 @@ class NavButton extends Component<Props> {
 
 
   handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, history: History): void => {
-
-    if (this.props.data && this.props.stepId && this.props.save && this.props.process)
-
-      Utils.saveData(this.props.data, this.props.stepId, this.props.save, this.props.process);
-
-    history.push(this.props.destination);
-
+    console.log(this.props.destination);
+    if (this.props.data && this.props.stepId && this.props.save && this.props.process) {
+      console.log(this.props.destination);
+      Utils.saveData(this.props.data, this.props.stepId, this.props.save, this.props.process)
+        .then(() => {
+          history.push(this.props.destination);
+        });
+    } else {
+      console.log(this.props.destination);
+      history.push(this.props.destination);
+    }
 
   }
 }

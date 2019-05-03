@@ -5,13 +5,12 @@ import { Utils } from '../../application/Utils';
 import { Process } from '../../model/Process';
 import NavButton from './NavButton';
 
-
-
 type State = {
     title: string,
     category: string,
     purpose: string,
-    details: string
+    details: string,
+    instanceId?: string
 
 }
 
@@ -30,6 +29,8 @@ class Description extends Component<Props, State> {
         }
     }
 
+    nextLocation = this.props.instanceId ? `/pricing?instance_id=${this.props.instanceId}` : '/pricing';
+    saveLocation = this.props.instanceId ? `/description?instance_id=${this.props.instanceId}` : '/description';
 
     handleChange = (e: any, key: string) => {
         switch (key) {
@@ -93,8 +94,8 @@ class Description extends Component<Props, State> {
 
 
 
-                    <NavButton destination="/pricing" value="Suivant" data={shrink(this.state)} stepId={stepId} direction="forward" />
-                    <NavButton destination="/description" value="Sauvegarder" data={shrink(this.state)} stepId={stepId} direction="forward" />
+                    <NavButton destination={this.nextLocation} value="Suivant" data={shrink(this.state)} stepId={stepId} direction="forward" />
+                    <NavButton destination={this.saveLocation} value="Sauvegarder" data={shrink(this.state)} stepId={stepId} direction="forward" />
                 </form>
             </div>
 

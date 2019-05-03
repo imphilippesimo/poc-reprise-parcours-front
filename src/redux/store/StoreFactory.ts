@@ -22,15 +22,15 @@ export class StoreFactory {
 //const emptyState: ProcessState = new ProcessState(new Process('', '', []));
 
 
-const processReducer = (state: any = new ProcessState(new Process('', '', [])), action: SaveProcessAction) => {
+const processReducer = (state: any = new ProcessState(new Process('', [])), action: SaveProcessAction) => {
     //console.log(action);
-    var newState: ProcessState = new ProcessState(new Process('', '', []));
+    var newState: ProcessState = new ProcessState(new Process('', []));
     switch (action.type) {
 
         case ActionType.LOADING_PROCESS_TYPE:
             newState.isFetching = true;
             //console.log(Object.assign(new ProcessState(new Process('', '', [])), state, newState));
-            return Object.assign(new ProcessState(new Process('', '', [])), state, newState);
+            return Object.assign(new ProcessState(new Process('', [])), state, newState);
 
 
         case ActionType.LOADING_PROCESS_SUCCESS_TYPE:
@@ -38,10 +38,10 @@ const processReducer = (state: any = new ProcessState(new Process('', '', [])), 
             //SET UP NEW STATE after load success
             newState.isFetching = false;
             newState.process = action.process;
-            //console.log(action);
+            //console.log(newState.process);
 
             //console.log(Object.assign(new ProcessState(new Process('', '', [])), state, newState));
-            return Object.assign(new ProcessState(new Process('', '', [])), state, newState);
+            return Object.assign(new ProcessState(new Process('', [])), state, newState);
 
 
 
@@ -51,7 +51,7 @@ const processReducer = (state: any = new ProcessState(new Process('', '', [])), 
             newState.process = action.process;
             //console.log(action);
 
-            return Object.assign(new ProcessState(new Process('', '', [])), state, newState);
+            return Object.assign(new ProcessState(new Process('', [])), state, newState);
 
 
         case ActionType.SAVING_PROCESS_SUCCESS_TYPE:
@@ -59,8 +59,9 @@ const processReducer = (state: any = new ProcessState(new Process('', '', [])), 
             //SET UP NEW STATE after save success
             newState.isFetching = false;
             newState.process = action.process;
+            console.log(newState.process);
 
-            return Object.assign(new ProcessState(new Process('', '', [])), state, newState);
+            return Object.assign(new ProcessState(new Process('', [])), state, newState);
 
 
 

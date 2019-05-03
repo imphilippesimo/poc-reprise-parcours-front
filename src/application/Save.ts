@@ -18,14 +18,7 @@ export class Save {
 
         return function action(dispatch: any) {
 
-            //flatten the url 
-            if (process.url)
-                process.flatUrl = Utils.flatenUrl(process.url);
             var resultAction: SaveProcessAction = new SaveProcessAction(ActionType.SAVING_PROCESS_TYPE, process);
-            dispatch({ ...resultAction });
-
-            resultAction = new SaveProcessAction(ActionType.SAVING_PROCESS_SUCCESS_TYPE, process);
-            console.log(process);
             dispatch({ ...resultAction });
 
             axios({
@@ -37,6 +30,12 @@ export class Save {
                 },
             }).then(function (response) {
                 //console.log(response);
+                let savedProcess: Process = new Process(response.data.process_id, response.data.steps, response.data.url);
+                savedProcess.processInstanceId = response.data.process_instance_id;
+                savedProcess.savedDate = response.data.saved_date;
+                resultAction = new SaveProcessAction(ActionType.SAVING_PROCESS_SUCCESS_TYPE, savedProcess);
+                /* console.log(savedProcess); */
+                dispatch({ ...resultAction });
             }).catch(function (error) {
                 console.log(error);
             });

@@ -14,15 +14,12 @@ export class Load {
     }
 
 
-    load(dispatch: any, processInstanceId: string|null) {
+    load(dispatch: any, processInstanceId: string | null) {
 
         return function action(dispatch: any) {
 
-            let resultAction: LoadProcessAction = new LoadProcessAction(ActionType.LOADING_PROCESS_TYPE, new Process("", "", []));
+            let resultAction: LoadProcessAction = new LoadProcessAction(ActionType.LOADING_PROCESS_TYPE, new Process("", []));
             dispatch({ ...resultAction });
-
-
-
             axios({
                 method: 'get',
                 url: 'http://localhost:8080/step',
@@ -32,7 +29,10 @@ export class Load {
 
             }).then(function (response) {
                 //console.log(response);
-                const process: Process = response.data;
+                const data = response.data;
+                const process: Process = new Process(data.process_id, data.steps, data.url);
+                process.processInstanceId = data.process_instance_id;
+                process.savedDate = data.saved_date;
                 resultAction = new LoadProcessAction(ActionType.LOADING_PROCESS_SUCCESS_TYPE, process);
                 dispatch({ ...resultAction });
 

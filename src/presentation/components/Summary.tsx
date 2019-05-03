@@ -13,14 +13,22 @@ type Props = {
     details: string,
     realPrice: string,
     displayedPrice: string,
-    paymentMode: string
+    paymentMode: string,
+    instanceId?: string
 
 }
 
 class Summary extends Component<Props> {
 
+    previousLocation = `/pricing?instance_id=${this.props.instanceId}`;
+
+
     onSave() {
         alert('Sure ?');
+    }
+
+    componentDidMount() {
+        //console.log(this.props);
     }
 
     render() {
@@ -54,7 +62,7 @@ class Summary extends Component<Props> {
                     >
                         Envoyer
                     </button>
-                    <NavButton destination="/pricing" value="Précédent" direction="backward"></NavButton>
+                    <NavButton destination=/* {this.previousLocation} */'description?instance_id=17087' value="Précédent" direction="backward"></NavButton>
 
                 </form>
             </Router>
@@ -76,7 +84,8 @@ const mapStateToProps = (state: any) => {
         details: '',
         realPrice: '',
         displayedPrice: '',
-        paymentMode: ''
+        paymentMode: '',
+        instanceId: process.processInstanceId
     }
 
     if (process.steps) {
